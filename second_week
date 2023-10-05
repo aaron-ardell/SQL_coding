@@ -1,0 +1,181 @@
+/*
+Hello SQL!
+
+Return a table with a single column named Greeting with the phrase 'hello world!'
+*/
+
+SELECT 'hello world!' AS "Greeting"
+
+-- Double quote column names if caps sensitive, otherwise in Postgresql all column names are folded into lowercase.
+
+
+/*
+Using our monsters table with the following schema:
+
+monsters table schema
+
+id
+name
+legs
+arms
+characteristics
+return the following table:
+
+** output schema**
+
+name
+characteristics
+Where the name is the original string repeated three times (do not add any spaces), and the characteristics are the original strings in reverse (e.g. 'abc, def, ghi' becomes 'ihg ,fed ,cba').
+*/
+
+SELECT REPEAT(name, 3) AS name, REVERSE(characteristics) AS characteristics FROM monsters
+
+-- Remember to reassign aliases for new table after functions.
+
+/*
+Given a demographics table in the following format:
+
+** demographics table schema **
+
+id
+name
+birthday
+race
+you need to return a table that shows a count of each race represented, ordered by the count in descending order as:
+
+** output table schema **
+
+race
+count
+*/
+
+SELECT race, COUNT(race) as count
+FROM demographics
+GROUP BY race
+ORDER BY count DESC 
+
+/*
+SQL Disorder
+https://www.codewars.com/kata/59cb550486a6fd10b50000ad/sql
+
+You are given a table numbers with just one column, number. It holds some numbers that are already ordered.
+
+You need to write a query that makes them un-ordered, as in, every possible ordering should appear equally often.
+*/
+
+SELECT *
+FROM numbers
+ORDER BY random();
+
+/*
+For this challenge you need to create a simple MIN / MAX statement that will return the Minimum and Maximum ages out of all the people.
+
+people table schema
+id
+name
+age
+select table schema
+age_min (minimum of ages)
+age_max (maximum of ages)
+*/
+
+SELECT *, MIN(age), MAX(age)
+FROM people
+
+/*
+You have access to a table of monsters as follows:
+
+monsters schema
+
+id
+name
+legs
+arms
+characteristics
+The monsters in the provided table have too many characteristics, they really only need one each. Your job is to trim the characteristics down so that each monster only has one. If there is only one already, provide that. If there are multiple, provide only the first one (don't leave any commas in there).
+
+You must return a table with the format as follows:
+
+output schema
+
+id
+name
+characteristic
+Order by id
+*/
+
+SELECT id, name, SPLIT_PART(characteristics, ',', 1) AS characteristic
+FROM monsters
+ORDER BY id
+
+/*
+https://www.codewars.com/kata/594a50bafd3b7031c1000013/sql
+
+to hexYou have access to a table of monsters as follows:
+
+monsters table schema
+id
+name
+legs
+arms
+characteristics
+Your task is to turn the numeric columns (arms, legs) into equivalent hexadecimal values.
+
+output table schema
+legs
+arms
+*/
+
+SELECT TO_HEX(legs) AS legs, TO_HEX(arms) AS arms
+FROM monsters;
+
+/*
+https://www.codewars.com/kata/5a8ec692b17101bfc70001ba/sql
+
+You are the owner of the Grocery Store. All your products are in the database, that you have created after CodeWars SQL excercises!:)
+
+You have reached a conclusion that you waste to much time because you have to many different warehouse to visit each week.
+
+You have to find out how many different type of products you buy from each producer. If you take only few items from some of them you will stop going there to save the gasoline:)
+
+In the results show producer and count_products_types which you buy from him.
+
+Order the result by count_products_types (DESC) then by producer (ASC) in case there are duplicate amounts,
+
+products table schema
+id
+name
+price
+stock
+producer
+results table schema
+count_products_types
+producer
+*/
+
+SELECT producer, COUNT(name) AS count_products_types
+FROM products
+GROUP BY producer
+ORDER BY count_products_types DESC, producer ASC;
+
+/*
+https://www.codewars.com/kata/580918e24a85b05ad000010c/sql
+
+For this challenge you need to create a simple SELECT statement that will return all columns from the people table, and join to the toys table so that you can return the COUNT of the toys
+
+people table schema
+id
+name
+toys table schema
+id
+name
+people_id
+You should return all people fields as well as the toy count as "toy_count".
+
+*/
+
+SELECT people.id, people.name, COUNT(toys.name) as toy_count 
+FROM people
+LEFT JOIN toys ON people.id = toys.people_id
+GROUP BY people.id; 
+
